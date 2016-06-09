@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using WebApiToken.Infraestructura;
@@ -31,9 +32,10 @@ namespace WebApiToken.Controllers
                 Email = createUserModel.Email,
                 FirstName = createUserModel.FirstName,
                 LastName = createUserModel.LastName,
-                Level = 3,
+                Level = "3",
                 JoinDate = DateTime.Now.Date,
             };
+            
 
             IdentityResult addUserResult = await this.AppUserManager.CreateAsync(user, createUserModel.Password);
 
@@ -154,6 +156,17 @@ namespace WebApiToken.Controllers
             {
                 return GetErrorResult(result);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("Html")]
+        public HttpResponseMessage GetHtml()
+        {
+             var response = new HttpResponseMessage();
+             response.Content = new StringContent("<html><body>Hello World</body></html>");
+             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+             return response;
         }
 
         [Route("ChangePassword")]

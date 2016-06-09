@@ -27,7 +27,7 @@ namespace WebApiToken.Migrations
                 EmailConfirmed = true,
                 FirstName = "Boris",
                 LastName = "Gonzalez",
-                Level = 1,
+                Level = "01",
                 JoinDate = DateTime.Now.AddYears(-3)
             };
 

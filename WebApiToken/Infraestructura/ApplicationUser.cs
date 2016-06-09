@@ -12,6 +12,7 @@ namespace WebApiToken.Infraestructura
 {
     public class ApplicationUser : IdentityUser
     {
+        
         [Required]
         [MaxLength(100)]
         public string FirstName { get; set; }
@@ -21,7 +22,8 @@ namespace WebApiToken.Infraestructura
         public string LastName { get; set; }
 
         [Required]
-        public byte Level { get; set; }
+        [MaxLength(2)]
+        public string Level { get; set; }
 
         [Required]
         public DateTime JoinDate { get; set; }

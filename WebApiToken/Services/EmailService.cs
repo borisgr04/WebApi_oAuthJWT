@@ -14,12 +14,16 @@ namespace WebApiToken.Services
     {
         public async Task SendAsync(IdentityMessage message)
         {
-            await configSendGridasync(message);
+            //await configSendGridasync(message);
+            await configSendSmtp(message);
         }
+
+        
 
         // Use NuGet to install SendGrid (Basic C# client lib) 
         private async Task configSendGridasync(IdentityMessage message)
         {
+
             var myMessage = new SendGridMessage();
 
             myMessage.AddTo(message.Destination);
@@ -30,10 +34,8 @@ namespace WebApiToken.Services
 
             var credentials = new NetworkCredential(ConfigurationManager.AppSettings["emailService:Account"],
                                                     ConfigurationManager.AppSettings["emailService:Password"]);
-
             // Create a Web transport for sending email.
             var transportWeb = new Web(credentials);
-
             // Send the email.
             if (transportWeb != null)
             {
@@ -44,6 +46,28 @@ namespace WebApiToken.Services
                 //Trace.TraceError("Failed to create Web transport.");
                 await Task.FromResult(0);
             }
+            
+        }
+
+        private async Task configSendSmtp(IdentityMessage message)
+        {
+            using (System.Net.Mail.MailMessage MailSetup = new System.Net.Mail.MailMessage())
+            {
+                NetworkCredential loginInfo = new NetworkCredential("lenierleonis@hotmail.com", "lenier1065646983");
+                MailSetup.Subject = message.Subject;
+                MailSetup.To.Add(message.Destination);
+                MailSetup.From = new System.Net.Mail.MailAddress("tramites@valledupar.gov.co","Avanzar es Posible!!!");
+                MailSetup.Body = message.Body;
+                using (System.Net.Mail.SmtpClient SMTP = new System.Net.Mail.SmtpClient("smtp.live.com"))
+                {
+                    SMTP.Port = 587;
+                    SMTP.EnableSsl = true;
+                    SMTP.Credentials = loginInfo;
+                    await SMTP.SendMailAsync(MailSetup);
+                }
+            }
+
+            
         }
     }
 }
